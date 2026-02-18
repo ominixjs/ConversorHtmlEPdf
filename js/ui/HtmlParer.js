@@ -1,6 +1,6 @@
 import ejs from "ejs";
 
-class HtmlParser {
+export default class HtmlParser {
   static async Parser(table) {
     return await ejs.renderFile("././view/table.ejs", {
       header: table.header,
@@ -8,5 +8,3 @@ class HtmlParser {
     });
   }
 }
-
-export default HtmlParser;
