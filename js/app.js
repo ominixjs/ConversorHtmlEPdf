@@ -21,7 +21,7 @@ async function init() {
   // Usa string do HTML contendo uma tabela para gerar um arquivo .html
   writer.Write(Date.now() + ".html", html);
   // Cria um PDF
-  PDFWriter.WritePDF("1.PDF", html);
+  await PDFWriter.WritePDF(Date.now() + ".pdf", html);
 }
 
 init();

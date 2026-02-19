@@ -1,9 +1,19 @@
-import pdf from "html-pdf";
+import puppeteer from "puppeteer";
 
-export default class PDFWriter {
-  static WritePDF(filename, html) {
-    pdf.create(html, {}).toFile(filename, (err) => {
-      console.log(err);
+export default class Puppeteer {
+  static async WritePDF(filename, html) {
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
+    const page = await browser.newPage();
+
+    await page.setContent(html, { waitUntil: "networkidle0" });
+    await page.pdf({
+      path: filename,
+      format: "A4",
+      printBackground: true,
+    });
+
+    await browser.close();
   }
 }
