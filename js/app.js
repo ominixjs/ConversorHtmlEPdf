@@ -18,10 +18,11 @@ async function init() {
   // Renderiza uma tabela no html baseada na array mapeada usando EJS,
   // por fim, retornando uma string do HTML pronto
   const html = await HtmlParser.Parser(table);
+  console.log(html);
   // Usa string do HTML contendo uma tabela para gerar um arquivo .html
   writer.Write(Date.now() + ".html", html);
-  // Cria um PDF
-  await PDFWriter.WritePDF(Date.now() + ".pdf", html);
+  // // Cria um PDF
+  PDFWriter.WritePDF(Date.now() + ".pdf", html);
 }
 
 init();

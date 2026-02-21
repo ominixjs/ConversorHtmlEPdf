@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 
-export default class Puppeteer {
+export default class PDFWriter {
   static async WritePDF(filename, html) {
     const browser = await puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
