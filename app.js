@@ -1,4 +1,6 @@
 import express from "express";
+import archiver from "archiver";
+import upload from "./class/upload.js";
 import init from "./services/init.js";
 
 const app = express();
@@ -13,13 +15,41 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-app.get("/convert-file", async (req, res) => {
+app.post("/convert", upload.single("file"), async (req, res) => {
   try {
-    await init();
-    res.redirect("/");
-  } catch (err) {
-    console.error(err);
-    res.redirect("/");
+    if (!req.file) {
+      return res.status(400).send("Arquivo não enviado");
+    }
+
+    // Arquivo convertido
+    const result = await init(req.file.buffer);
+
+    if (!result) {
+      return res.status(400).send("Erro na conversão");
+    }
+
+    const { html, pdfBuffer } = result;
+
+    res.setHeader("Content-Type", "application/zip");
+    res.setHeader("Content-Disposition", "attachment; filename=resultado.zip");
+
+    const archive = archiver("zip");
+
+    archive.on("error", (err) => {
+      console.error(err);
+      res.status(500).send("Erro ao gerar ZIP");
+    });
+
+    archive.pipe(res);
+
+    const name = Date.now();
+    archive.append(html, { name: name + ".html" });
+    archive.append(pdfBuffer, { name: name + ".pdf" });
+
+    archive.finalize();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erro interno no servidor");
   }
 });
 

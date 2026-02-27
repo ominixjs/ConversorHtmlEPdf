@@ -1,17 +1,10 @@
-import fs from "fs";
-import util from "util";
-
 export default class Reader {
-  constructor() {
-    // Usando metodo NODE para criar um async e ser retornado
-    this.reader = util.promisify(fs.readFile);
-  }
-
-  async Read(filepath) {
+  Read(buffer) {
     try {
-      return await this.reader(filepath, "utf8");
+      return buffer.toString("utf8");
     } catch (err) {
-      return undefined;
+      console.error(err);
+      return null;
     }
   }
 }
